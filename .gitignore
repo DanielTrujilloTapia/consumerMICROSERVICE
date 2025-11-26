@@ -1,0 +1,100 @@
+﻿## Compilación de Visual Studio / .NET ##
+bin/
+obj/
+out/
+[Bb]uild/
+[Bb]uilds/
+
+## Archivos de usuario y configuración ##
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.userprefs
+*.csproj.user
+
+## Archivos de dependencias ##
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.mdb
+*.log
+*.vspscc
+*.vssscc
+
+## Carpetas de IDE ##
+.vs/
+.idea/
+.vscode/
+*.code-workspace
+
+## Archivos de configuración de entorno ##
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+appsettings.Local.json
+
+## Archivos de prueba / cobertura ##
+TestResults/
+*.coverage
+*.coveragexml
+*.trx
+
+## Archivos temporales del sistema ##
+~$*
+*.tmp
+*.bak
+*.swp
+*.swn
+*.swo
+*.orig
+*.dbmdl
+
+## Archivos generados por herramientas ##
+_ReSharper*/
+*.DotSettings.user
+*.ncrunchsolution
+*.ncrunchproject
+*.ncrunchsnapshot
+*.psess
+*.vsp
+*.vspx
+*.scc
+
+## Archivos de Docker (si no quieres subirlos) ##
+#Dockerfile
+#docker-compose.yml
+#docker-compose.*.yml
+
+## Archivos de publicación ##
+publish/
+*.pubxml
+*.publishproj
+
+## Logs ##
+*.log
+logs/
+LogFiles/
+
+## Archivos de Rider ##
+.idea/
+*.iml
+
+## Archivos de Copilot / VS Extensions ##
+.vsconfig
+*.tlog
+
+## Sistema operativo ##
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
