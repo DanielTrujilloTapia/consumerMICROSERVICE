@@ -13,7 +13,7 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitConsumerService.Services
 {
-    public class RabbitMqListenerService : BackgroundService
+    public class RabbitMqListenerProductsService : BackgroundService
     {
         private readonly ILogger<RabbitMqListenerService> _logger;
         private readonly IConfiguration _configuration;
@@ -28,20 +28,20 @@ namespace RabbitConsumerService.Services
         private readonly string _rabbitPassword;
         private readonly string _rabbitExchangeType;
 
-        public RabbitMqListenerService(IConfiguration configuration, ILogger<RabbitMqListenerService> logger)
+        public RabbitMqListenerProductsService(IConfiguration configuration, ILogger<RabbitMqListenerService> logger)
         {
             _configuration = configuration;
             _logger = logger;
 
             // Lectura de configuración de nombres
-            _exchangeName = _configuration["TopicAndQueueNames:OrderCreatedTopic"];
-            _queueName = _configuration["TopicAndQueueNames:OrderQueueName"];
+            _exchangeName = _configuration["TopicAndQueueNames:ProductCreatedTopic"];
+            _queueName = _configuration["TopicAndQueueNames:ProductQueueName"];
             _mysqlConnectionString = _configuration.GetConnectionString("MySqlConnection");
 
             // Lectura de configuración de RabbitMQ
             _rabbitHostName = _configuration["RabbitMQ:HostName"] ?? "localhost";
-            _rabbitUserName = _configuration["RabbitMQ:UserName"] ?? "danielct";
-            _rabbitPassword = _configuration["RabbitMQ:Password"] ?? "123456";
+            _rabbitUserName = _configuration["RabbitMQ:UserName"] ?? "guest";
+            _rabbitPassword = _configuration["RabbitMQ:Password"] ?? "guest";
             _rabbitExchangeType = _configuration["RabbitMQ:ExchangeType"] ?? ExchangeType.Fanout;
         }
 
@@ -107,41 +107,32 @@ namespace RabbitConsumerService.Services
         private async Task InsertMessageToDatabaseAsync(string message)
         {
             // Deserializa el JSON del mensaje al modelo C#
-            var order = System.Text.Json.JsonSerializer.Deserialize<OrderMessage>(message);
+            var product = System.Text.Json.JsonSerializer.Deserialize<ProductsMessage>(message);
 
             const string sql = @"
-                INSERT INTO Orders (
-                    Id, UserName, TotalPrice, FirstName, LastName, EmailAddress,
-                    AddressLine, Country, State, ZipCode, CardName, CardNumber,
-                    Expiration, CVV, PaymentMethod, CreateBy, CreateDate
+                INSERT INTO Products (
+                    Id, ProductName, Description, Category, Price, Stock,
+                    UnitOfMeasure, ImageUrl, CreateBy, CreateDate
                 )
                 VALUES (
-                    @Id, @UserName, @TotalPrice, @FirstName, @LastName, @EmailAddress,
-                    @AddressLine, @Country, @State, @ZipCode, @CardName, @CardNumber,
-                    @Expiration, @CVV, @PaymentMethod, @CreateBy, @CreateDate
+                    @Id, @ProductName, @Description, @Category, @Price, @Stock,
+                    @UnitOfMeasure, @ImageUrl, @CreateBy, @CreateDate
                 );
             ";
 
             using var connection = new MySqlConnection(_mysqlConnectionString);
             await connection.ExecuteAsync(sql, new
             {
-                order.Id,
-                order.UserName,
-                order.TotalPrice,
-                order.FirstName,
-                order.LastName,
-                order.EmailAddress,
-                order.AddressLine,
-                order.Country,
-                order.State,
-                order.ZipCode,
-                order.CardName,
-                order.CardNumber,
-                order.Expiration,
-                order.CVV,
-                order.PaymentMethod,
+                product.Id,
+                product.ProductName,
+                product.Description,
+                product.Category,
+                product.Price,
+                product.Stock,
+                product.UnitOfMeasure,
+                product.ImageUrl,
                 CreateBy = "RabbitConsumerService",
-                CreateDate = DateTime.UtcNow
+                CreateDate = DateTime.UtcNow,
             });
         }
 

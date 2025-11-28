@@ -22,6 +22,7 @@ builder.Services.AddOpenApi();
 
 // Registramos el servicio que escucha RabbitMQ en background
 builder.Services.AddHostedService<RabbitMqListenerService>();
+builder.Services.AddHostedService<RabbitMqListenerProductsService>();
 builder.Services.AddSingleton<OrderService>();
 
 
